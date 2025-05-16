@@ -2,15 +2,15 @@
 
 namespace App\Services;
 
-use App\Http\Controllers\UserController;
+use App\Http\Controllers\UsersController;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class UsersService
 {
-    protected UserController $controller;
+    protected UsersController $controller;
 
-    public function __construct(UserController $controller)
+    public function __construct(UsersController $controller)
     {
         $this->controller = $controller;
     }
@@ -24,6 +24,4 @@ class UsersService
 
         return $users;
     }
-
-
 }

@@ -12,14 +12,20 @@ class UsersController extends Controller
             ->paginate($perPage, ['*'], 'page', $page);
     }
 
-    public function createUser($body)
+    public function getUserById($id)
     {
-        return User::create([
-            'name' => $body['name'],
-            'last_name' => $body['last_name'],
-            'age' => $body['age'],
-            'email' => $body['email'],
-            'password' => bcrypt($body['password']),
-        ]);
+        return User::find($id);
+    }
+
+    public function deleteUser($id)
+    {
+        $user = User::find($id);
+
+        if (!$user) {
+            return response()->json(['msg' => 'User not found', 'error' => true], 404);
+        }
+
+        $user->delete();
+        return response()->json(['msg' => 'User deleted successfully', 'error' => false], 200);
     }
 }

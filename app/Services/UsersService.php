@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Http\Controllers\UsersController;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -27,43 +28,18 @@ class UsersService
         return $users;
     }
 
-    public function postUser(Request $request): JsonResponse
+    public function getUser(string $id): User
     {
-        $validator = Validator::make($request->all(), [
-            'name' => ['required', 'max:255'],
-            'last_name' => ['required', 'max:255'],
-            'age' => ['required', 'integer'],
-            'email' => ['required', 'email', 'unique:users'],
-            'password' => ['required'],
-            'password_confirmation' => ['required'],
-        ]);
+        $users = $this->controller->getUserById($id);
 
-        if ($validator->fails()) {
-            return response()->json([
-                'msg' => 'Validation failed',
-                'errors' => $validator->errors(),
-                'error' => true
-            ], 422);
-        }
-
-        $validated = $validator->validated();
-
-        if ($validated['password'] !== $request->input('password_confirmation')) {
-            return response()->json(
-                ['msg' => 'Password confirmation does not match.', 'error' => true],
-                422
-            );
-        }
-
-        $user = $this->controller->createUser($validated);
-
-        if (!$user) {
-            return response()->json(['error' => 'User creation failed.'], 422);
-        }
-
-        return response()->json(
-            ['msg' => 'User created successfully.', 'error' => false],
-            200
-        );
+        return $users;
     }
+
+    public function deleteUser(string $id): JsonResponse
+    {
+        $user = $this->controller->deleteUser($id);
+
+        return $user;
+    }
+
 }

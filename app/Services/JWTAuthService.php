@@ -50,17 +50,15 @@ class JWTAuthService
 
     public function login(Request $request): JsonResponse
     {
-        e($request->all());
-
         $validator = Validator::make($request->all(), [
-            'email' => ['required', 'string', 'email'],
-            'password' => ['required', 'string'],
+            'email' => ['required', 'email'],
+            'password' => ['required'],
         ]);
 
         if ($validator->fails()) {
             return response()->json([
                 'msg' => 'Validation failed',
-                'errors' => $validator->errors()->toJson(),
+                'errors' => $validator->errors(),
                 'error' => true
             ], 422);
         }
@@ -78,5 +76,4 @@ class JWTAuthService
 
         return $response;
     }
-
 }

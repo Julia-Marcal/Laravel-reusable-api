@@ -18,6 +18,15 @@ services:
     networks:
       - laravel-network
 
+  redis:
+    image: redis:alpine
+    container_name: laravel_api_redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    networks:
+      - laravel-network
+
   app:
     build:
       context: .
@@ -31,6 +40,7 @@ services:
       - laravel-network
     depends_on:
       - mysql
+      - redis
 
   webserver:
     image: nginx:alpine

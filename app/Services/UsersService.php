@@ -5,7 +5,6 @@ namespace App\Services;
 use App\Http\Controllers\UsersController;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Redis;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\JsonResponse;
 
@@ -30,15 +29,9 @@ class UsersService
 
     public function getUser(string $id): User
     {
-        $user = Redis::get('user:' . $id);
 
-        if ($user) {
-            $userArray = json_decode($user, true);
-            $user = new User($userArray);
-        } else {
-            $user = $this->controller->getUserById($id);
-            Redis::set('user:' . $id, json_encode($user));
-        }
+
+        $user = $this->controller->getUserById($id);
 
         return $user;
     }

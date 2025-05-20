@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Illuminate\Support\Facades\Redis;
 
 class UsersController extends Controller
 {
@@ -14,7 +15,17 @@ class UsersController extends Controller
 
     public function getUserById($id)
     {
-        return User::find($id);
+        $user = Redis::get('user:' . $id);
+
+        if ($user) {
+            $userArray = json_decode($user, true);
+            $user = new User($userArray);
+        } else {
+            $user = User::find($id);
+            Redis::set('user:' . $id, json_encode($user));
+        }
+
+        return $user;
     }
 
     public function deleteUser($id)

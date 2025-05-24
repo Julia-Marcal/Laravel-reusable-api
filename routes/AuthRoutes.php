@@ -11,7 +11,10 @@ Route::prefix('auth')->group(function () {
     Route::post('/login', function (Request $request, JWTAuthService $JWTAuthService) {
         return $JWTAuthService->login($request);
     });
-     Route::post('/logout', function (Request $request, JWTAuthService $JWTAuthService) {
+    Route::post('/logout', function (Request $request, JWTAuthService $JWTAuthService) {
         return $JWTAuthService->logout($request);
+    });
+    Route::post('/refresh', function (Request $request, JWTAuthService $JWTAuthService) {
+        return $JWTAuthService->refresh($request);
     });
 });

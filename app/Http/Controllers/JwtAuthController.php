@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Auth;
 
 class JwtAuthController extends Controller
 {
-    public function register(Array $body)
+    public function register(array $body)
     {
         $user = User::create([
             'name' => $body['name'],
@@ -48,5 +48,34 @@ class JwtAuthController extends Controller
         JWTAuth::invalidate(JWTAuth::getToken());
 
         return response()->json(['message' => 'Successfully logged out']);
+    }
+
+    public function refresh()
+    {
+        try {
+            $token = JWTAuth::getToken();
+            if (!$token) {
+                return response()->json(['error' => 'Token not provided'], 401);
+            }
+            $newToken = JWTAuth::refresh($token);
+            return response()->json(['token' => $newToken]);
+        } catch (JWTException $e) {
+            return response()->json(['error' => 'Could not refresh token'], 401);
+        }
+    }
+
+    public function validateToken($credentials)
+    {
+        try {
+            $token = JWTAuth::attempt($credentials);
+            if (!$token) {
+                return response()->json(['error' => 'Invalid credentials'], 401);
+            } else {
+                $user = Auth::user();
+                return response()->json(['msg' => 'Token is valid.', 'user' => $user, 'error' => false], 200);
+            }
+        } catch (JWTException $e) {
+            return response()->json(['error' => 'Could not validate token'], 500);
+        }
     }
 }

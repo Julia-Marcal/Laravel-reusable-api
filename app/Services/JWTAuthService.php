@@ -76,4 +76,12 @@ class JWTAuthService
 
         return $response;
     }
+
+    public function refresh(): JsonResponse
+    {
+
+        $response = $this->controller->refresh();
+
+        return $response;
+    }
 }

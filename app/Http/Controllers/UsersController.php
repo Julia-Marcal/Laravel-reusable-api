@@ -4,13 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Support\Facades\Redis;
+use App\Http\Resources\UserResource;
 
 class UsersController extends Controller
 {
     public function getAllUsers($page = 1, $perPage = 10)
     {
-        return User::orderBy('name')
-            ->paginate($perPage, ['*'], 'page', $page);
+        $users = User::orderBy('name')->paginate($perPage, ['*'], 'page', $page);
+        return UserResource::collection($users);
     }
 
     public function getUserById($id)
@@ -25,7 +26,7 @@ class UsersController extends Controller
             Redis::set('user:' . $id, json_encode($user));
         }
 
-        return $user;
+        return new UserResource($user);
     }
 
     public function deleteUser($id)

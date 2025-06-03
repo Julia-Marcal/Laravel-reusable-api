@@ -19,18 +19,15 @@ class UsersService
 
     public function getAllUsers(Request $request): LengthAwarePaginator
     {
-        $page = $request->input('page', 1);
         $pageSize = $request->input('pageSize', 10);
 
-        $users = $this->controller->getAllUsers($page, $pageSize);
+        $users = User::paginate($pageSize);
 
         return $users;
     }
 
-    public function getUser(string $id): User
+    public function getUser(string $id): \App\Http\Resources\UserResource
     {
-
-
         $user = $this->controller->getUserById($id);
 
         return $user;

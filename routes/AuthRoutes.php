@@ -4,7 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Services\JWTAuthService;
 
-Route::prefix('auth')->group(function () {
+Route::prefix('auth')->middleware('throttle:api')->group(function () {
     Route::post('/register', function (Request $request, JWTAuthService $JWTAuthService) {
         return $JWTAuthService->postUser($request);
     });

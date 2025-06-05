@@ -14,15 +14,6 @@ class UsersSeeder extends Seeder
      */
     public function run(): void
     {
-        User::factory()->create([
-            'name' => 'Test',
-            'last_name' => 'User',
-            'age' => 30,
-            'email' => 'test@example.com',
-            'password' => Hash::make('password'),
-            'remember_token' => Str::random(10),
-        ]);
-
         User::factory(10)->create();
     }
 }
